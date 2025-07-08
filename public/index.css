@@ -1,0 +1,54 @@
+/* Body font! true type*/
+@font-face{
+    font-family:"body_font";
+    src: url("fonts_folder/playtime.ttf") format("truetype");
+
+}
+
+/* Header font!*/
+@font-face{
+    font-family:"header_font";
+    src: url("fonts_folder/flux.ttf") format("truetype");
+}
+
+html{
+    scroll-behavior: smooth;;
+}
+
+body{
+    font-family: "body_font";
+    text-align:  center;
+    font-size: 18px;
+}
+
+h1{
+    font-family:"header_font";
+    text-transform: uppercase;
+    font-weight: bolder;
+    font-size: 2.0em;
+    text-shadow: 4px 4px 4px rgba(0, 0, 0, 0.5);
+}
+
+input{
+    border: solid 1.5px black;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: body_font;
+    width: 150px;
+    box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+button{
+    border: solid 1.5px black;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: body_font;
+    font-size: 16px;
+    font-weight:bolder;
+    cursor: pointer;
+}
+
+a{
+    text-decoration: none;
+    
+}

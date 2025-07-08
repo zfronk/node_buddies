@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"> <!-- Character encoding for the HTML document -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="safe zone login page">
+    <meta name="keywords" content="login page, safe zone, secure, login">
+    <meta name="author" content="zfronk">
+    <meta name="robots" content="noindex, follow"> <!--No index follow -->
+    <title>Safe zone Login page</title>
+
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="favi_folder/favi.png">
+</head>
+
+<body>
+    <h1>Access your account</h1>
+    <p id="welcome_user">Welcome back!</p>
+
+    <!-- Login form to post DATA -->
+    <form id="login_form">
+        <label for="email">Email address:</label>
+        <input type="email" id="email" name="email">
+        <br><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password">
+
+        <!-- Error message Box -->
+        <p id="error_box"></p>
+
+        <p>Not registered yet? <a href="/register">Register below!</a></p>
+        <button type="submit" id="login_button">Login</button>
+    </form>
+
+    <script src="login.js" defer></script> <!-- The script executes only after the DOM Content has loaded! -->
+
+</body>
+
+</html>
