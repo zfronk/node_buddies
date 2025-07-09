@@ -138,6 +138,70 @@ app.get("/login", (req, res) =>{
     
 });;
 
+// Route to login the user
+app.post("/login_user", async(req, res) => {
+    try{
+        const login_data = req.body; // Get the login data in JSON format!
+        
+        // Check if any of the fields are empty! // Email or the password
+        if(!login_data.email || !login_data.password){
+            return res.status(400).json({
+                error_message: "Please fill all the fields!" // Server check for security!
+            });
+
+        }
+        
+        // Check if email contains "@" and "." characters
+        if(!login_data.email.includes("@") || !login_data.email.includes(".")){
+            return res.status(400).json({
+                error_message: "Please enter a valid email address!" // Server check for security!
+            })
+        }
+
+        // If all fields are filled then find the user from the database by email
+        const existing_user = await User.findOne({
+            email: login_data.email 
+        });
+
+        // If it returns false then user does not exist!
+        if(!existing_user){
+            return res.status(400).json({
+                error_message: "User does not exist! Please register first!" // User does not exist!
+            });
+
+        }
+
+        // Else check whether the password matches using the hashed password in db
+        const password_match = await bcrypt.compare(login_data.password, existing_user.password)
+
+        // If invalid password then return status 403
+        if(!password_match){
+            return res.status(403).json({
+                error_message: "Invalid password! Try again!" 
+            });
+        }
+
+        // If password matches
+        return res.status(200).json({
+            success_message: "Login successful!",
+            user_data:{
+                username: existing_user.username // Send the username to client for welcome message!
+            }
+        });
+
+
+    }
+    catch(error){
+        res.status(500).json({
+            error_message: "Error occured while logging in! Please try again later.",
+            details: error.message // From the erro object
+        });
+
+    }
+    
+
+});
+
 // For any invalid request send to 404 page
 app.use((req, res) =>{
     res.status(404).sendFile(path.join(__dirname, "..", "public", "html_files/404.html"));
