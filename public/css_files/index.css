@@ -1,14 +1,14 @@
 /* Body font! true type*/
 @font-face{
     font-family:"body_font";
-    src: url("fonts_folder/playtime.ttf") format("truetype");
+    src: url("../fonts_folder/playtime.ttf") format("truetype");
 
 }
 
 /* Header font!*/
 @font-face{
     font-family:"header_font";
-    src: url("fonts_folder/flux.ttf") format("truetype");
+    src: url("../fonts_folder/flux.ttf") format("truetype");
 }
 
 html{
