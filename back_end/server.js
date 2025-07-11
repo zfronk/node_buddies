@@ -3,10 +3,13 @@ const path = require("path");
 const app = express();
 const mongo_db = require("mongoose"); // Import mongoose to connect to MongoDB driver
 const bcrypt = require("bcrypt"); // Import bcrypt to hash passwords
+const jwt = require("jsonwebtoken"); //Get the json web token
+const cookie_parser = require('cookie-parser'); // Use to read cookies request
 
+// Will soon add to env for credentials storage
 const PORT = 3400;
 const connection_string = "mongodb+srv://zfronk:h2YIJKjj1CegB1DF@cluster-one.gncpcic.mongodb.net/safe_zone?retryWrites=true&w=majority&appName=cluster-one"; // MongoDB connection string!
-
+const jwt_secret = "low_level_zfronk.C"; // Json web token secret!
 
 // Create a users schema for mongoDB
 // users collection should have username, email, password and created_at fields!
@@ -41,10 +44,11 @@ const User = mongo_db.model("users", user_schema, "users"); // Create a model fo
 // For each request check frm the public folder
 app.use(express.json()); // Receive JSON data from client
 app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(cookie_parser()); // Used to read cookies on request
 
 // Get request from the client! // ".." to enhacne back directory...
 app.get("/", (req, res) =>{
-    res.sendFile(path.join(__dirname, "..","public", "html_files/register.html"));
+    res.sendFile(path.join(__dirname, "..","public", "html_files/login.html"));
 
 });
 
@@ -181,6 +185,25 @@ app.post("/login_user", async(req, res) => {
             });
         }
 
+        // Now sign the json so that the user uses it on all requests
+        const token_payload = {
+            user_id: existing_user._id, // Pass the user id to the payload
+            user_name: existing_user.username // Pass the username to the payload
+        }
+
+        // Sign the the token_payload using the secret key! using json web token package
+        const jwt_main_token = jwt.sign(token_payload, jwt_secret, {
+            expiresIn: "15m" // Expires in 15 minutes
+        });
+
+        // Respons with a cookie... called "token"
+        res.cookie("token", jwt_main_token, {
+            httpOnly: true, // Avoid client side access to the cookie
+            sameSite: "lax", // Sa
+            secure: false // Means only https can access the cookie
+        });
+
+
         // If password matches
         return res.status(200).json({
             success_message: "Login successful!",
@@ -201,6 +224,42 @@ app.post("/login_user", async(req, res) => {
     
 
 });
+
+// Some protected route -- Say a dashboard
+app.get("/dashboard", async (req, res) =>{
+    try{
+        const token = req.cookies.token; // Read the cookies object
+
+        // If the token is not present, return an error message
+        if(!token){
+            // Status code 401
+            res.sendFile(path.join(__dirname, "..", "public", "html_files", "401.html")); // Send the 401.html file
+        }
+        const decoded_payload = jwt.verify(token, jwt_secret); // Verify the token payload
+
+        // Await to find the username via the decoded payload id!
+        const existing_user = await User.findOne({
+            _id: decoded_payload.user_id 
+        });
+
+        // If user not found!
+        if(!existing_user){
+            // Status code 401
+            res.sendFile(path.join(__dirname, "..", "public", "html_files", "401.html"));
+
+        }
+        
+        // If the user is found respond with the dashboard page...
+        res.sendFile(path.join(__dirname, "..", "public", "html_files", "dashboard.html"));
+    
+    }
+    catch(error){
+        return res.status(500).json({
+            error_message: "Error occured while accessing dashboard! Please try again later.", // respond with an error message
+        });
+    }
+});
+
 
 // For any invalid request send to 404 page
 app.use((req, res) =>{

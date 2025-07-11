@@ -56,6 +56,7 @@ login_form.addEventListener("submit", async(event) =>{
                 headers: {
                     "Content-Type": "application/json" // Send data in JSON format
                 },
+                credentials: "include", // Send cookies with request!
                 body: JSON.stringify(login_data) // Convert the login data object to JSON string
             });
            
@@ -86,6 +87,9 @@ login_form.addEventListener("submit", async(event) =>{
                 error_box.textContent = ""; // Clear the error box
                 login_form.reset(); // Reset the form fields
                 login_button.disabled = false; // Enable the button once again!
+
+                await delay_execution(2000); // Wait for some 2 seconds then redirect
+                window.location.href = "/dashboard";
             }
 
         }
