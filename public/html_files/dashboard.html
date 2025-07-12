@@ -1,15 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Dashboard page</title>
-    <link rel="stylesheet" href="../css_files/index.css">
-    <link rel="icon" type="image/png" href="../favi_folder/favi.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="zfronk">
+  <meta name="description" content="dashboard, after_login_page, feed">
+  <meta name="robots" content="noindex, nofollow">
+
+  <title>Dashboard | NodeBuddies</title>
+  <link rel="stylesheet" href="../css_files/dashboard.css" />
+  <link rel="icon" type="image/png" href="../favi_folder/favi.png" />
 </head>
+
 <body>
-    <h1 id="dashboard_header">Welcome to the dashboard page</h1>
-    <p>Feels good to be here, right</p>
+  <header>
+    <h1 id="dashboard_header">Node Buddies</h1>
+    <p id="welcome_greeting">Welcome to node buddies 👋</p>
+  </header>
+
+  <main id="main_dashboard_container">
+    <aside id="side_bar">
+        <ul>
+            <li><a href="#journal_section">- Journal</a></li>
+            <li><a href="#community_section">- Community</a></li>
+            <li><a href="#settings_section">- Settings</a></li>
+            <li><a href="/about">- About node buddies</a></li>
+            <br>
+            <button>Log out</button>
+        </ul>
+
+    </aside>
+
+    <section id="main_content">
+        <!--Journal section-->
+        <div id="journal_section">
+            <h2>Your Journal</h1>
+            <p>Feeling the vibe, add a personal note!</p>
+
+            <!--Form to add write the journals-->
+            <form id="journal_form">
+                <textarea id="journal_text_area" rows="5" placeholder="Hey there, what's on your mind..."></textarea>
+                <br>
+                <button type="submit">Post journal</button>
+            </form>
+            
+            <!--To store posted journals-->
+            <div id="journal_vault">
+
+            </div>
+        </div>
+
+        <!--Community section-->
+        <div id="community_section">
+
+        </div>
+
+        <!--Settings section-->
+        <div id="settings_section">
+
+        </div>
+    </section>
+
+  </main>
+
+  <script src="../js_files/dashboard.js"></script>
 </body>
 </html>

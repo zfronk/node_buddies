@@ -193,14 +193,14 @@ app.post("/login_user", async(req, res) => {
 
         // Sign the the token_payload using the secret key! using json web token package
         const jwt_main_token = jwt.sign(token_payload, jwt_secret, {
-            expiresIn: "15m" // Expires in 15 minutes
+            expiresIn: "45m" // Expires in 15 minutes
         });
 
         // Respons with a cookie... called "token"
         res.cookie("token", jwt_main_token, {
             httpOnly: true, // Avoid client side access to the cookie
             sameSite: "lax", // Sa
-            secure: false // Means only https can access the cookie
+            secure: true // Means only https can access the cookie
         });
 
 
@@ -254,10 +254,13 @@ app.get("/dashboard", async (req, res) =>{
     
     }
     catch(error){
-        return res.status(500).json({
-            error_message: "Error occured while accessing dashboard! Please try again later.", // respond with an error message
-        });
+        return res.sendFile(path.join(__dirname, "..", "public", "html_files", "401.html"));
     }
+});
+
+// An about route
+app.get("/about", (req, res) =>{
+    res.sendFile(path.join(__dirname, "..", "public", "html_files/about.html" ));
 });
 
 
