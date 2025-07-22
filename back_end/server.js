@@ -38,8 +38,26 @@ const user_schema = new mongo_db.Schema({
 
 });
 
+// Journal schema to work with // journal, created_at, journal_id (Same as the users id for easy sorting...)
+const journal_schema = new mongo_db.Schema({
+    journal:{
+        type: String,
+        required: true,
+        trim: true
+    },
+    created_at:{
+        type: Date,
+        default: Date.now
+    },
+    journal_id:{
+        type: String,
+        required: true
+    }
+});
+
 // Create the collection in the safe_zone database
 const User = mongo_db.model("users", user_schema, "users"); // Create a model for the users collection
+const Journal = mongo_db.model("journals", journal_schema, "journals"); // Create a model for the journals collection
 
 // For each request check frm the public folder
 app.use(express.json()); // Receive JSON data from client
@@ -193,13 +211,13 @@ app.post("/login_user", async(req, res) => {
 
         // Sign the the token_payload using the secret key! using json web token package
         const jwt_main_token = jwt.sign(token_payload, jwt_secret, {
-            expiresIn: "45m" // Expires in 15 minutes
+            expiresIn: "75m" // Expires in 15 minutes
         });
 
         // Respons with a cookie... called "token"
         res.cookie("token", jwt_main_token, {
             httpOnly: true, // Avoid client side access to the cookie
-            sameSite: "lax", // Sa
+            sameSite: "Strict", // Secure and usable
             secure: true // Means only https can access the cookie
         });
 
@@ -258,7 +276,28 @@ app.get("/dashboard", async (req, res) =>{
     }
 });
 
-// An about route
+// Route to post journals added by user!
+app.post("/personal_journal", async (req, res) =>{
+    try{
+        const recieved_cookie = req.cookies.token;
+
+        // If no token sent during the fetch request!
+        if(!recieved_cookie){
+            return res.sendFile(path.join(__dirname, "..", "public", "html_files/401.html"));
+
+        }
+
+    }
+    catch(error){
+        res.status(500).json({
+            details: error.message,
+            error_message: "Error occured while adding personal journal!"
+        });
+    }
+
+});
+
+// An about route no need to read cookies here just display...
 app.get("/about", (req, res) =>{
     res.sendFile(path.join(__dirname, "..", "public", "html_files/about.html" ));
 });

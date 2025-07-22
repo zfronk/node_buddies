@@ -15,14 +15,14 @@
 <body>
   <header>
     <h1 id="dashboard_header">Node Buddies</h1>
-    <p id="welcome_greeting">Welcome to node buddies 👋</p>
+    <p id="welcome_greeting">Welcome to node buddies 👋 🧡</p>
   </header>
 
   <main id="main_dashboard_container">
     <aside id="side_bar">
         <ul>
-            <li><a href="#journal_section">- Journal</a></li>
-            <li><a href="#community_section">- Community</a></li>
+            <li><a href="#journal_section">- Write your Journal</a></li>
+            <li><a href="#community_section">- Community Feed</a></li>
             <li><a href="#settings_section">- Settings</a></li>
             <li><a href="/about">- About node buddies</a></li>
             <br>
@@ -38,31 +38,55 @@
             <p>Feeling the vibe, add a personal note!</p>
 
             <!--Form to add write the journals-->
+            <!--Lets finish personal journal first!-->
             <form id="journal_form">
                 <textarea id="journal_text_area" rows="5" placeholder="Hey there, what's on your mind..."></textarea>
                 <br>
-                <button type="submit">Post journal</button>
+                <p id="personal_journal_error"></p>
+                <button type="submit" id="add_journal_button" style="background-color: bisque;">Add journal</button>
             </form>
             
-            <!--To store posted journals-->
+            <!--To store posted personal journals-->
             <div id="journal_vault">
+              <h3>Your personal journals</h3>
+              
+              <p class="journal_text">- "Man why don't i like frameworks?..."</p>
+              <small class="timestamp">Posted on July 9, 2025 at 10:42 AM</small>
 
             </div>
         </div>
 
+        <hr> <!--Horizontal break-->
+        
         <!--Community section-->
         <div id="community_section">
+          <h2>Community Feed</h2>
+          <p>Let others know what you have in mind...</p>
+
+          <!--Post to community!-->
+          <form id="community_post">
+              <textarea rows="5" placeholder="What was you're first programming language?"></textarea>
+              <br>
+              <div id="community_buttons">
+                <button id="community_post_button" type="submit" style="background-color: bisque;">Share post!</button>
+                <button id="community_feed_button" style="background-color: lightcyan;">See what others are saying...</button>
+                <br>
+                <button id="shared_posts_button" style="background-color: lightcyan; margin-top: 5px;">Your shared posts</button>
+              </div>
+            </form>
 
         </div>
 
-        <!--Settings section-->
-        <div id="settings_section">
 
-        </div>
     </section>
 
   </main>
 
-  <script src="../js_files/dashboard.js"></script>
+
+  <footer>
+    <small>Made with love by zfronk &copy; - Node buddies 2025 </small>
+  </footer>
+
+  <script src="../js_files/personal_journal.js" defer></script> <!--Handle personal journals, ensure html loads before scipt exec-->
 </body>
 </html>
