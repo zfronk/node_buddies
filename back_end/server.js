@@ -47,9 +47,9 @@ const journal_schema = new mongo_db.Schema({
     },
     created_at:{
         type: Date,
-        default: Date.now
+        required: true
     },
-    journal_id:{
+    user_id:{
         type: String,
         required: true
     }
@@ -277,7 +277,7 @@ app.get("/dashboard", async (req, res) =>{
 });
 
 // Route to post journals added by user! 
-app.post("/personal_journal", async (req, res) =>{
+app.post("/post_personal_journal", async (req, res) =>{
     try{
         const recieved_cookie = req.cookies.token; // Get cookie
 
@@ -292,26 +292,53 @@ app.post("/personal_journal", async (req, res) =>{
         const journal_object = req.body;
         
         // If either is of the data is empty respond with a json 
-        if(journal_object.journal || journal_object.time_created){
-            res.status(400).json({
+        if(!journal_object.journal || !journal_object.time_created){
+            return res.status(400).json({
                 error_message: "Insufficient data passed by the client!"
             });
 
         }
 
         // Otherwise if the data is legitimate 
-        const decoded_payload = jwt.verify(recieved_cookie, jwt_secret); // Decode the payload to get token
-        const decoded_user_id = decoded_payload.user_id; // Get the user id from the payload
+        const payload = jwt.verify(recieved_cookie, jwt_secret); // Decode the payload to get token
+        const decoded_user_id = payload.user_id; // Get the user id from the payload
+
+        // Format the journal to send to database
+        const formatted_journal = {
+            journal: journal_object.journal,
+            user_id: decoded_user_id,
+            created_at: journal_object.time_created
+
+        }
+
+        const journal_to_save = new Journal(formatted_journal); // Create a new journal
+        await journal_to_save.save(); // Save the journal now!
+
+        return res.status(201).json({
+            message: "New journal saved!"
+        });
 
     }
     // Catch error...
     catch(error){
-        res.status(500).json({
+        return res.status(500).json({
             details: error.message,
             error_message: "Error occured while adding personal journal!"
         });
     }
 
+});
+
+// Route to get personalm_journals posted before
+app.get("/get_personal_journal", async (req, res) =>{
+    try{
+        const recieved_cookie = req.cookies.token; // Get cookie sent during the request
+
+
+    }
+    catch(error){
+
+    }
 });
 
 // An about route no need to read cookies here just display...
