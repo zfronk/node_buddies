@@ -276,18 +276,35 @@ app.get("/dashboard", async (req, res) =>{
     }
 });
 
-// Route to post journals added by user!
+// Route to post journals added by user! 
 app.post("/personal_journal", async (req, res) =>{
     try{
-        const recieved_cookie = req.cookies.token;
+        const recieved_cookie = req.cookies.token; // Get cookie
 
-        // If no token sent during the fetch request!
+        // If no token sent during the fetch request hit with a 401 response
         if(!recieved_cookie){
-            return res.sendFile(path.join(__dirname, "..", "public", "html_files/401.html"));
+            return res.status(401).json({
+                message: "You are not logged in!"
+            });
+        }
+
+        // If cookie present get the request body
+        const journal_object = req.body;
+        
+        // If either is of the data is empty respond with a json 
+        if(journal_object.journal || journal_object.time_created){
+            res.status(400).json({
+                error_message: "Insufficient data passed by the client!"
+            });
 
         }
 
+        // Otherwise if the data is legitimate 
+        const decoded_payload = jwt.verify(recieved_cookie, jwt_secret); // Decode the payload to get token
+        const decoded_user_id = decoded_payload.user_id; // Get the user id from the payload
+
     }
+    // Catch error...
     catch(error){
         res.status(500).json({
             details: error.message,
@@ -300,6 +317,11 @@ app.post("/personal_journal", async (req, res) =>{
 // An about route no need to read cookies here just display...
 app.get("/about", (req, res) =>{
     res.sendFile(path.join(__dirname, "..", "public", "html_files/about.html" ));
+});
+
+// Forbidden route... 401 status
+app.get("/forbidden", (req, res) =>{
+    res.status(401).sendFile(path.join(__dirname, "..", "public/html_files/401.html"));
 });
 
 

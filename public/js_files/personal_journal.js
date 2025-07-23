@@ -44,114 +44,58 @@ journal_form.addEventListener("submit", async (event) =>{
         time_created: Date.now()
     }
 
-    // Talk to server and talk
-    const talk_to_server = async () =>{
+    // Talk to server to post the given data 
+    const talk_to_server_to_post = async () =>{
        try{
+            // Fetch from the api route but to post some data...
             const fetch_response = await fetch("/personal_journal", {
                 method: "POST",
                 credentials: "include",
                 headers:{
                     "Content-Type": "application/json"
                 },
-                body:JSON.stringify(journal_object)
+                body: JSON.stringify(journal_object) // Push the journal_object to the api as a string
             });
             
-            // If fetch response is not okay!
-            if(!fetch_response.ok){
-                const response = await fetch_response.json();
-                console.log(response.error_message);
+            // If unathorized throw back to forbidden route
+            if(fetch_response.status === 401){
+                window.location.href = "/forbidden"; // Reroute to forbidden route...
+                return;
+            
+            }
 
+            // Response no okay
+            if(!fetch_response.ok){
+                personal_journal_error.style.color = "red"; // Make the response red in color
+                personal_journal_error.textContent = "Error occured while fetching response"; // Display text Content
+                await await_execution(2000); // 2 second delay
+
+                personal_journal_error.textContent = "";
+                return; // Exit function
 
             }
+            
+            
+
+            
+        
 
        }
        catch(error){
+            const error_message = error.message;
+            personal_journal_error.style.color = "red"; // Make text color red...
+            personal_journal_error.textContent = error_message + ", server might be offline...";
+            await await_execution(2000); // Await some 2 seconds then clear the response
+            
+            personal_journal_error.textContent = ""; // Clear
+            add_journal_button.disabled = false; // Enable button
+            return;
 
        }
 
         
     }
 
-    talk_to_server();
-    
-    /*
-    // LOGIC TO CREATE DATE ON UI
-    // Else if there is data it should post...
-    const formatted_added_journal = `- "${journal_object.journal}"`;
-    const date_object = new Date(journal_object.time_created); //  New data object with inbuilt methods
-
-    // Hardcorded array data...
-    const days_of_week = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const months_of_year = ["Jan", "Feb", 'Mar', "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",  "Nov", "Dec"];
-
-
-    const month = months_of_year[date_object.getMonth()]; // Get the month
-    const date = date_object.getDate(); // Get the date of the given month
-    const year = date_object.getFullYear(); // Get the given year...
-    const hours = date_object.getHours(); // Get the given hours
-    const minutes = date_object.getMinutes().toString().padStart(2, 0); // Get the given minutes, pad start make sure it's of 2 chars
-    
-    // Parse the 24 hour clock system...
-    // If hours above 12 meaning it's pm
-    let formated_hours; // To format the hours received
-    let time_line; // Either store AM or PM
-
-    // Meaning it's pm...
-    if(hours > 12){
-        formated_hours = hours - 12;
-        formated_hours.toString().padStart(2, 0);
-
-        time_line = "PM";
-
-    }
-
-    // If below 12 meaning it's AM
-    else if(hours < 12){
-        formated_hours = hours;
-        formated_hours.toString().padStart(2, 0);
-
-        time_line = "AM";
-
-    }
-    // if equal to 12 sharp means it's pm
-    else if(hours === 12){
-        formated_hours = hours; //Make it 12 pm
-        formated_hours.date.toString().padStart(2, 0); // Ensure it takes two indexes and if null add a zero before
-
-        time_line = "PM";
-    } 
-
-    // If 00 meaning midnight
-    else if(hours === 0){
-        formated_hours = hours + 12; // Means that 00 becomes 12 am now...
-        formated_hours.toString().padStart(2, 0);
-
-        time_line = "AM";
-    }
-
-    const time_stamp = `Posted on ${month} ${date}, ${year} at ${formated_hours}:${minutes} ${time_line} `;
-
-    await await_execution(2000); // Delay execution before updating UI
-    personal_journal_error.textContent = "Journal updated successfully!";
-    personal_journal_error.style.fontSize = "16px";
-    personal_journal_error.style.color = "green";
-
-    await await_execution(2000); // Delay again before clearing UI adn enabling button
-
-    personal_journal_error.textContent = "";
-    journal_form.reset(); // Reset the whole form
-
-    // New p element to hold the added journal
-    const new_paragraph_element = document.createElement("p");
-    new_paragraph_element.textContent = formatted_added_journal;
-
-    const new_small_elem = document.createElement("small");
-    new_small_elem.textContent = time_stamp; // Add time stamp to the html
-
-    journal_vault.appendChild(new_paragraph_element); // Append to the journal vault
-    journal_vault.appendChild(new_small_elem);
-    add_journal_button.disabled = false; // Enable the button
-    */
-    
+    await talk_to_server_to_post();
 
 });
