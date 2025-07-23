@@ -19,8 +19,9 @@ body{
     font-family: "body_font";
     text-align:  center;
     font-size: 18px;
+    background-color: #f4f1ee; /* Oat Milk as the color...*/
 
-    margin-bottom: 100px;
+    margin-bottom: 20px;
 }
 
 h1{
@@ -74,9 +75,9 @@ li{
 textarea{
     font-family: body_font;
     padding:10px;
-    width: 300px;
+    width: 280px;
     margin: 10px;
-    border-radius: 2px;
+    border-radius: 4px;
 }
 
 hr{
@@ -93,7 +94,7 @@ footer{
 
 
 #journal_vault{
-    background-color: beige;
+    background-color: #f0f4f8; /* Winter Haze */
     padding-left: 20px;
     padding-right: 20px;
     padding-bottom: 20px;

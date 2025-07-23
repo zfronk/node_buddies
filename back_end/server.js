@@ -330,13 +330,47 @@ app.post("/post_personal_journal", async (req, res) =>{
 });
 
 // Route to get personalm_journals posted before
-app.get("/get_personal_journal", async (req, res) =>{
+app.get("/get_personal_journals", async (req, res) =>{
     try{
         const recieved_cookie = req.cookies.token; // Get cookie sent during the request
+        
+        // If no cookie included during request being sent to server
+        if(!recieved_cookie){
+            return res.status(401).json({
+                message: "You are not logged in!"
+            });
+
+        }
+
+        // Else we should retrieve the cookie and decode to get the user id...
+        const decoded_payload = jwt.verify(recieved_cookie, jwt_secret); // Decode using secret you know...
+        const logged_in_user_id = decoded_payload.user_id; // From the key user id
+
+        // Search from the Mongo DB database 
+        const users_journals = await Journal.find({
+            user_id: logged_in_user_id
+
+        })
+        .select("journal created_at") // Only pull back these given keys from the database...
+        .sort({
+            created_at: -1 // Newest first
+        })
+        .lean(); // Get as POJO // Pure javascript object avoid the Mongo db object methods
+
+        // Return all the user journals as a response from the database
+        return res.json({
+            retrieved_journals: users_journals,
+            success_message: "All journals retrieved..."
+        });
 
 
     }
+    // Throw an error down...
     catch(error){
+        return res.status(500).json({
+            error: error.message,
+            details: "Opps something happened in the server side!" 
+        });
 
     }
 });

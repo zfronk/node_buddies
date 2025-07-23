@@ -110,10 +110,31 @@ journal_form.addEventListener("submit", async (event) =>{
 
     await talk_to_server_to_post(); // INVOKE TALK TO SERVER FUNCTION...
 
+    // Need to add another html section for better responsive nature...
     // Talk to server to get some response and display to UI you know...
     const talk_to_server_to_get = async () =>{
         try{
-            const fetch_reponse = await fetch("get_personal_journals");
+            const fetch_response = await fetch("/get_personal_journals", {
+                method: "GET",
+                credentials: "include"
+            });
+
+            // If anauthorized request...
+            if(fetch_response.status === 401){
+                window.location.href = "/forbidden"; // SEND TO FORBIDDEN ROUTE!
+                return;
+            }
+
+            // If response is not okay!
+            if(!fetch_response.ok){
+                const error_message = await fetch_response.json();
+                personal_journal_error.textContent = error_message.details; // The json object key from the server side...
+                personal_journal_error.color = "red"; // Some color red
+                await await_execution(2000); // Wait for some 2 seconds
+                
+                personal_journal_error.textContent = ""; // Clear the text then...
+
+            }
         }
         catch(error){
 
