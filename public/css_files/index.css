@@ -57,6 +57,8 @@ button{
     font-size: 16px;
     font-weight:bolder;
     cursor: pointer;
+
+    box-shadow: 2px 2px black;
 }
 
 a{

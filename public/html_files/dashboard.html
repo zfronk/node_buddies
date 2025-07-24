@@ -24,7 +24,7 @@
             <li><a href="#journal_section">- Write your Journal</a></li>
             <li><a href="#community_section">- Community Feed</a></li>
             <li><a href="#settings_section">- Settings</a></li>
-            <li><a href="/about">- About node buddies</a></li>
+            <li><a href="/about">- About Node Buddies</a></li>
             <br>
             <button style="background-color: #d6dde0;">Log out</button>
         </ul>
@@ -46,12 +46,16 @@
                 <button type="submit" id="add_journal_button" style="background-color: bisque;">Add journal</button> <!--Bisque-->
             </form>
             
+            
             <!--To store posted personal journals-->
             <div id="journal_vault">
               <h3>Your personal journals</h3>
               
-              <p class="journal_text">- "Man why don't i like frameworks?..."</p>
+              <p class="journal_text">- "Man why don't I like frameworks?..."</p>
               <small class="timestamp">Posted on July 9, 2025 at 10:42 AM</small>
+
+              <!--Add view added journals button!-->
+              <button id="view_added_journals" style="background-color: bisque; margin-top: 10px;">View added journals</button>
 
             </div>
         </div>
@@ -65,16 +69,16 @@
 
           <!--Post to community!-->
           <form id="community_post">
-              <textarea rows="5" placeholder="What was you're first programming language?"></textarea>
+              <textarea rows="5" placeholder="What was your first programming language?"></textarea>
               <br>
               <div id="community_buttons">
                 <button id="community_post_button" type="submit" style="background-color: bisque;">Share post!</button> <!--Bisque-->
-                <button id="community_feed_button" style="background-color: #d7cce2;">See what others are saying...</button> <!-- Muted lavender-->
-                <br>
-                <button id="shared_posts_button" style="background-color: #d7cce2; margin-top: 5px; border-color: b7acc3;">Your shared posts</button> <!--Muted lavender-->
               </div>
             </form>
-
+            
+            <!--More button sections-->
+            <button id="shared_posts_button" style="background-color: #d7cce2; margin-top: 10px; border-color: b7acc3;">Your shared posts</button> <!--Muted lavender-->
+            <button id="community_feed_button" style="background-color: #d7cce2;">See what others are saying...</button> <!-- Muted lavender-->
         </div>
 
 

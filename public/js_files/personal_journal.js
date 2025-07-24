@@ -5,6 +5,7 @@ const journal_vault = document.getElementById("journal_vault"); // Where the per
 
 let add_journal_button = document.getElementById("add_journal_button"); // The add journal button
 let personal_journal_error = document.getElementById("personal_journal_error"); // To show personal journal errors
+let view_added_journals = document.getElementById("view_added_journals"); // Button to view added journals ...
 
 // Just to hold of script excecution...
 const await_execution = (duration) =>{
@@ -108,38 +109,15 @@ journal_form.addEventListener("submit", async (event) =>{
         
     }
 
-    await talk_to_server_to_post(); // INVOKE TALK TO SERVER FUNCTION...
+    await talk_to_server_to_post(); // INVOKE TALK TO SERVER FUNCTION... TO POST DATA
 
-    // Need to add another html section for better responsive nature...
-    // Talk to server to get some response and display to UI you know...
-    const talk_to_server_to_get = async () =>{
-        try{
-            const fetch_response = await fetch("/get_personal_journals", {
-                method: "GET",
-                credentials: "include"
-            });
+});
 
-            // If anauthorized request...
-            if(fetch_response.status === 401){
-                window.location.href = "/forbidden"; // SEND TO FORBIDDEN ROUTE!
-                return;
-            }
-
-            // If response is not okay!
-            if(!fetch_response.ok){
-                const error_message = await fetch_response.json();
-                personal_journal_error.textContent = error_message.details; // The json object key from the server side...
-                personal_journal_error.color = "red"; // Some color red
-                await await_execution(2000); // Wait for some 2 seconds
-                
-                personal_journal_error.textContent = ""; // Clear the text then...
-
-            }
-        }
-        catch(error){
-
-        }
-        
-    }
+// Listen to events from the view added journals...
+view_added_journals.addEventListener("click", () =>{
+    view_added_journals.disabled = true; // Disable button to prevent spam...
+    window.location.href = "/added_journals_hub"; // Route to view added journals...
+    view_added_journals.disabled = false;
+    return;
 
 });

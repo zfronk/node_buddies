@@ -1,0 +1,37 @@
+/* Header font*/
+@font-face{
+    src: url("../fonts_folder/kid.otf") format("opentype");
+    font-family: header_font;
+}
+
+/* Body font*/
+@font-face{
+    src: url("../fonts_folder/playtime.ttf") format("truetype");
+    font-family: "body_font";
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{
+    font-family: "body_font";
+    padding: 10px;
+}
+
+h1{
+    font-family: header_font;
+    text-transform: uppercase;
+}
+
+button{
+    border: solid 1.5px black;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: body_font;
+    font-size: 16px;
+    font-weight:bolder;
+    cursor: pointer;
+    
+    box-shadow: 2px 2px black;
+}

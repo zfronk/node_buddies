@@ -351,7 +351,7 @@ app.get("/get_personal_journals", async (req, res) =>{
             user_id: logged_in_user_id
 
         })
-        .select("journal created_at") // Only pull back these given keys from the database...
+        .select("journal created_at -_id") // Only pull back these given keys from the database... // Minus id...
         .sort({
             created_at: -1 // Newest first
         })
@@ -375,20 +375,47 @@ app.get("/get_personal_journals", async (req, res) =>{
     }
 });
 
+// Route to view added journals hub html file
+app.get("/added_journals_hub", (req, res) =>{
+    // Check if user is logged in...
+    const recieved_cookie = req.cookies.token;
+
+    // If no cookie just boot out!
+    if(!recieved_cookie){
+        return res.sendFile(path.join(__dirname, "..", "public/html_files/401.html")); // Authorized access... send 401 html file
+    }
+    const decoded_cookie = jwt.verify(recieved_cookie, jwt_secret ); // Decode using the secret key...
+    
+    // Check the decoded cookie object and run from the database itself...
+    const user_id = decoded_cookie.user_id;
+    const user_found = User.findOne({
+        _id : user_id
+    });
+
+    // If user doesn't exist...
+    if(!user_found){
+        return res.sendFile(path.join(__dirname, "..", "public/html_files/401.html")); // Authorized access... send 401 html file
+    }
+
+    // If user exists then now display
+    return res.sendFile(path.join(__dirname, "..", "public/html_files/added_journals_hub.html"));
+
+});
+
 // An about route no need to read cookies here just display...
 app.get("/about", (req, res) =>{
-    res.sendFile(path.join(__dirname, "..", "public", "html_files/about.html" ));
+    return res.sendFile(path.join(__dirname, "..", "public", "html_files/about.html" ));
 });
 
 // Forbidden route... 401 status
 app.get("/forbidden", (req, res) =>{
-    res.status(401).sendFile(path.join(__dirname, "..", "public/html_files/401.html"));
+    return res.status(401).sendFile(path.join(__dirname, "..", "public/html_files/401.html"));
 });
 
 
 // For any invalid request send to 404 page
 app.use((req, res) =>{
-    res.status(404).sendFile(path.join(__dirname, "..", "public", "html_files/404.html"));
+    return res.status(404).sendFile(path.join(__dirname, "..", "public", "html_files/404.html"));
 });
 
 
